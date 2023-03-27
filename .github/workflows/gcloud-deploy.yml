@@ -29,7 +29,7 @@ jobs:
 
       - name: 'Install gke-gcloud-auth-plugin'
         run: >
-          gcloud components install gke-gcloud-auth-plugin
+          gcloud components install gke-gcloud-auth-plugin --quiet
 
       - name: 'Connect to GKE'
         run: >
