@@ -30,4 +30,4 @@ jobs:
 
       - name: 'Restart'
         run: >
-          kubectl rollout restart deployment spring-petclinic-rest
+          kubectl rollout restart deployment spring-petclinic-rest --timeout=300s
