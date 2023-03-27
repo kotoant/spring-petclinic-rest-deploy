@@ -16,6 +16,8 @@ spec:
     metadata:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/env-config: {{ include (print $.Template.BasePath "/env-configmap.yaml") . | sha256sum }}
+        checksum/env-secret: {{ include (print $.Template.BasePath "/env-secret.yaml") . | sha256sum }}
       {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

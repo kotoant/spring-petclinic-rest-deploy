@@ -2,6 +2,30 @@ name: Deploy to Google Kubernetes Engine (GKE) Autopilot
 
 on:
   workflow_dispatch:
+    inputs:
+      server:
+        description: 'server'
+        required: true
+        default: 'tomcat'
+        type: choice
+        options:
+          - jetty
+          - netty
+          - tomcat
+          - undertow
+      profile:
+        description: 'profile'
+        required: true
+        default: 'webmvc-jdbc'
+        type: choice
+      options:
+          - webmvc-jdbc
+          - webmvc-jdbc-loom
+          - webflux-jdbc-reactive
+          - webflux-jdbc-loom
+          - webflux-jdbc-coroutine
+          - webflux-r2dbc-reactive
+          - webflux-r2dbc-coroutine
 
 jobs:
   build:
@@ -37,4 +61,5 @@ jobs:
 
       - name: 'Deploy'
         run: >
-          helm upgrade spring-petclinic-rest ./spring-petclinic-rest --atomic --install --timeout 5m --wait
+          helm upgrade --set server=${{ inputs.server }} --set profile=${{ inputs.profile }} spring-petclinic-rest
+          ./spring-petclinic-rest --atomic --install --timeout 5m --wait
