@@ -1,0 +1,112 @@
+# Default values for spring-petclinic-rest.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application. Versions are not expected to
+# follow Semantic Versioning. They should reflect the version the application is using.
+# It is recommended to use it with quotes.
+appVersion: "latest"
+
+replicaCount: 1
+
+image:
+  repository: kotoant/spring-petclinic-rest
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+containerPort: 8080
+server: tomcat
+profile: webmvc-jdbc
+
+db:
+  host: 10.59.32.3
+  name: petclinic
+  username: petclinic
+  password: petclinic
+
+springConfig:
+  server: https://spring-cloud-config-server-n2u6xnwqaa-lz.a.run.app
+  name: petclinic
+  label: main
+  failFast: true
+  retry:
+    initialInterval: 5000
+    multiplier: 1.1
+    maxInterval: 10000
+    maxAttempts: 6
+
+service:
+  type: NodePort
+  port: 80
+
+ingress:
+  enabled: true
+  className: ""
+  annotations:
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+    # https://cloud.google.com/kubernetes-engine/docs/tutorials/configuring-domain-name-static-ip#use_an_ingress
+    kubernetes.io/ingress.global-static-ip-name: spring-petclinic-rest-ip
+    networking.gke.io/managed-certificates: "springpetclinicrest.ru"
+  hosts: []
+#    - host: chart-example.local
+#      paths:
+#        - path: /
+#          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+   limits:
+     cpu: 4000m
+     memory: 4096Mi
+   requests:
+     cpu: 4000m
+     memory: 4096Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

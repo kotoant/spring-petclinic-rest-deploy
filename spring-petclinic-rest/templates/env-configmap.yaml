@@ -1,0 +1,12 @@
+# Use config map for not-secret configuration data
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "spring-petclinic-rest.fullname" . }}-env-configmap
+  labels:
+    {{- include "spring-petclinic-rest.labels" . | nindent 4 }}
+data:
+  PORT: {{ .Values.containerPort | quote }}
+  SERVER: {{ .Values.server | quote }}
+  PROFILE: {{ .Values.profile | quote }}

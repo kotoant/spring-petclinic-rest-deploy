@@ -1,0 +1,13 @@
+spring:
+  config:
+    import: configserver:{{ .Values.springConfig.server }}
+    name: {{ .Values.springConfig.name }}
+    label: {{ .Values.springConfig.label }}
+    fail-fast: {{ .Values.springConfig.failFast }}
+    retry:
+      initial-interval: {{ .Values.springConfig.retry.initialInterval }}
+      multiplier: {{ .Values.springConfig.retry.multiplier }}
+      max-interval: {{ .Values.springConfig.retry.maxInterval }}
+      max-attempts: {{ .Values.springConfig.retry.maxAttempts }}
+
+server.forward-headers-strategy: framework

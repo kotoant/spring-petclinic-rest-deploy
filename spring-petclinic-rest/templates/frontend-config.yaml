@@ -1,0 +1,9 @@
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: {{ include "spring-petclinic-rest.fullname" . }}-ssl-redirect
+  labels:
+    {{- include "spring-petclinic-rest.labels" . | nindent 4 }}
+spec:
+  redirectToHttps:
+    enabled: true
