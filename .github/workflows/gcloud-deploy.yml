@@ -18,7 +18,7 @@ on:
         required: true
         default: 'webmvc-jdbc'
         type: choice
-      options:
+        options:
           - webmvc-jdbc
           - webmvc-jdbc-loom
           - webflux-jdbc-reactive
