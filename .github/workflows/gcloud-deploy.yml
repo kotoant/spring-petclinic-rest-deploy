@@ -33,4 +33,4 @@ jobs:
 
       - name: 'Deploy'
         run: >
-          helm upgrade spring-petclinic-rest ./spring-petclinic-rest --atomic --install --timeout 1m --wait
+          helm upgrade spring-petclinic-rest ./spring-petclinic-rest --atomic --install --timeout 5m --wait
