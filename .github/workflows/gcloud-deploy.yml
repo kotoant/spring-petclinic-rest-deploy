@@ -79,7 +79,7 @@ jobs:
           latestTag=${{ steps.find_latest_tag.outputs.tag }};
           if [[ $version == v* ]]; then echo "VERSION=$(echo ${version#"v"})" >> $GITHUB_ENV; fi;
           if [[ $version == "latest" ]]; then
-            if [[ ${{ inputs.release }} ]]; then
+            if [[ ${{ inputs.release }} == "true" ]]; then
               echo "VERSION=$(echo ${latestTag#"v"})" >> $GITHUB_ENV;
             else
               echo "VERSION=latest" >> $GITHUB_ENV;
