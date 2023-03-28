@@ -35,7 +35,7 @@ on:
 
 env:
   VERSION_TAG_REGEXP: '^v\d+\.\d+\.\d+$'
-  VERSION_REGEXP: '^$|^latest$|$VERSION_TAG_REGEXP'
+  VERSION_REGEXP: '^$|^latest$|^v\d+\.\d+\.\d+$'
 
 jobs:
   build:
@@ -63,7 +63,7 @@ jobs:
         uses: oprypin/find-latest-tag@v1
         with:
           repository: kotoant/spring-petclinic-rest  # The repository to scan.
-          prefix: '$VERSION_TAG_REGEXP'
+          regex: '$VERSION_TAG_REGEXP'
         id: find_latest_tag  # The step ID to refer to later.
 
 #      - uses: 'actions/checkout@v3'
