@@ -43,8 +43,8 @@ jobs:
     steps:
       - name: 'Check version'
         run: >
-          if [[ ! ${{ inputs.version }} =~ $VERSION_REGEXP ]]; then printf 'version should match regular expression
-          [version: %s, regexp: %s]\n' ${{ inputs.version }} $VERSION_REGEXP >&2; exit 1; fi
+          if [[ ! ${{ inputs.version }} =~ $VERSION_REGEXP ]]; then echo "::error ::version should match regular
+          expression [version: ${{ inputs.version }}, regexp: $VERSION_REGEXP]"; exit 1; fi
 
 #      - uses: 'actions/checkout@v3'
 #
