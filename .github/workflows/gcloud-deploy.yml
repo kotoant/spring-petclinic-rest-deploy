@@ -34,7 +34,6 @@ on:
           - webflux-r2dbc-coroutine
 
 env:
-  VERSION_TAG_REGEXP: '^v\d+\.\d+\.\d+$'
   VERSION_REGEXP: '^$|^latest$|^v\d+\.\d+\.\d+$'
 
 jobs:
@@ -63,7 +62,7 @@ jobs:
         uses: oprypin/find-latest-tag@v1
         with:
           repository: kotoant/spring-petclinic-rest  # The repository to scan.
-          regex: '$VERSION_TAG_REGEXP'
+          regex: '^v\d+\.\d+\.\d+$'
         id: find_latest_tag  # The step ID to refer to later.
 
 #      - uses: 'actions/checkout@v3'
