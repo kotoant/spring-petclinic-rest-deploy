@@ -34,7 +34,8 @@ on:
           - webflux-r2dbc-coroutine
 
 env:
-  VERSION_REGEXP: '^$|^latest$|^v[0-9]+\.[0-9]+\.[0-9]+$'
+  VERSION_TAG_REGEXP: '^v\d+\.\d+\.\d+$'
+  VERSION_REGEXP: '^$|^latest$|$VERSION_TAG_REGEXP'
 
 jobs:
   build:
@@ -46,7 +47,7 @@ jobs:
         run: >
           if [[ ! ${{ inputs.version }} =~ $VERSION_REGEXP ]]; then
             echo "::error ::version should match regular expression [version: ${{ inputs.version }}, regexp: $VERSION_REGEXP]";
-
+            exit 1;
           fi
 
       - name: 'Check release tag'
@@ -56,6 +57,14 @@ jobs:
           repository: kotoant/spring-petclinic-rest  # The repository to scan.
           releases-only: true  # We know that all relevant tags have a GitHub release for them.
           regex: '^${{ inputs.version }}$'
+
+      - name: 'Find latest tag'
+        if: ${{ inputs.version == 'latest' }}
+        uses: oprypin/find-latest-tag@v1
+        with:
+          repository: kotoant/spring-petclinic-rest  # The repository to scan.
+          prefix: '$VERSION_TAG_REGEXP'
+        id: find_latest_tag  # The step ID to refer to later.
 
 #      - uses: 'actions/checkout@v3'
 #
