@@ -54,7 +54,7 @@ jobs:
             exit 1;
           fi;
           if [[ ! ${{ inputs.version }} =~ $VERSION_REGEXP ]]; then
-            echo "::error ::version should match regular expression [version: ${{ inputs.version }}, regexp: $VERSION_REGEXP]";
+            echo "::error ::version doesn't match regexp [version: ${{ inputs.version }}, regexp: $VERSION_REGEXP]";
             exit 1;
           fi;
 
@@ -90,36 +90,36 @@ jobs:
         run: >
           echo "::notice ::Deploy version: $VERSION"
 
-#      - uses: 'actions/checkout@v3'
-#
-#      - id: 'auth'
-#        name: 'Authenticate to Google Cloud'
-#        uses: 'google-github-actions/auth@v1'
-#        with:
-#          credentials_json: '${{ secrets.GCP_SA_KEY }}'
-#
-#      - name: 'Set up Cloud SDK'
-#        uses: 'google-github-actions/setup-gcloud@v1'
-#        with:
-#          version: '422.0.0'
-#
-#      - name: 'Set up Helm'
-#        uses: azure/setup-helm@v3
-#        with:
-#          version: '3.11.2'
-#
-#      - name: 'Install gke-gcloud-auth-plugin'
-#        run: >
-#          gcloud components install gke-gcloud-auth-plugin --quiet
-#
-#      - name: 'Connect to GKE'
-#        run: >
-#          gcloud container clusters get-credentials autopilot-cluster-1 --region europe-north1 --project kotoant
-#
-#      - name: 'Deploy'
-#        run: >
-#          helm upgrade spring-petclinic-rest
-#          --set appVersion=${{ inputs.version }}
-#          --set server=${{ inputs.server }}
-#          --set profile=${{ inputs.profile }}
-#          ./spring-petclinic-rest --atomic --install --timeout 5m --wait
+      - uses: 'actions/checkout@v3'
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          version: '422.0.0'
+
+      - name: 'Set up Helm'
+        uses: azure/setup-helm@v3
+        with:
+          version: '3.11.2'
+
+      - name: 'Install gke-gcloud-auth-plugin'
+        run: >
+          gcloud components install gke-gcloud-auth-plugin --quiet
+
+      - name: 'Connect to GKE'
+        run: >
+          gcloud container clusters get-credentials autopilot-cluster-1 --region europe-north1 --project kotoant
+
+      - name: 'Deploy'
+        run: >
+          helm upgrade spring-petclinic-rest
+          --set appVersion=$VERSION
+          --set server=${{ inputs.server }}
+          --set profile=${{ inputs.profile }}
+          ./spring-petclinic-rest --atomic --install --timeout 5m --wait
