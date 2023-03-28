@@ -68,10 +68,10 @@ jobs:
       - name: 'Calculate version'
         run: >
           version = ${{ inputs.version }};
-          latestTag = ${{ steps.find_latest_tag.outputs.tag }}
-          if [[ $version == v* ]]; then echo "VERSION=$(echo ${version#"v"})" >> $GITHUB_ENV; fi
-          if [[ $version == "" ]]; then echo "VERSION=latest" >> $GITHUB_ENV; fi
-          if [[ $version == "latest" ]]; then echo "VERSION=$(echo ${latestTag#"v"})" >> $GITHUB_ENV; fi
+          latestTag = ${{ steps.find_latest_tag.outputs.tag }};
+          if [[ $version == v* ]]; then echo "VERSION=$(echo ${version#"v"})" >> $GITHUB_ENV; fi;
+          if [[ $version == "" ]]; then echo "VERSION=latest" >> $GITHUB_ENV; fi;
+          if [[ $version == "latest" ]]; then echo "VERSION=$(echo ${latestTag#"v"})" >> $GITHUB_ENV; fi;
 
       - name: 'Print version'
         run: >
