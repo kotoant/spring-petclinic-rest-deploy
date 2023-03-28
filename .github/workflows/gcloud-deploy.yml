@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'version to release. Possible options:\n "" - latest released version\n "latest" - image tag "latest"\n "[v]X.X.X - released version with optional "v" prefix'
+        description: 'version%ndesc'
         required: true
         default: 'latest'
         type: string
