@@ -3,6 +3,11 @@ name: Deploy to Google Kubernetes Engine (GKE) Autopilot
 on:
   workflow_dispatch:
     inputs:
+      version:
+        description: 'version to release. Possible options:\n "" - latest released version\n "latest" - image tag "latest"\n "[v]X.X.X - released version with optional "v" prefix'
+        required: true
+        default: 'latest'
+        type: string
       server:
         description: 'server'
         required: true
