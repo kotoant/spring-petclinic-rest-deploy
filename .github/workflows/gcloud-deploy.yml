@@ -53,10 +53,10 @@ jobs:
             echo "::error ::release=false mode supports only latest version [version: ${{ inputs.version }}]";
             exit 1;
           fi;
-          if [[ ! ${{ inputs.version }} =~ $VERSION_REGEXP ]]; then
-            echo "::error ::version should match regular expression [version: ${{ inputs.version }}, regexp: $VERSION_REGEXP]";
-            exit 1;
-          fi;
+#          if [[ ! ${{ inputs.version }} =~ $VERSION_REGEXP ]]; then
+#            echo "::error ::version should match regular expression [version: ${{ inputs.version }}, regexp: $VERSION_REGEXP]";
+#            exit 1;
+#          fi;
 
       - name: 'Check release tag'
         if: ${{ startsWith(inputs.version, 'v') }}
