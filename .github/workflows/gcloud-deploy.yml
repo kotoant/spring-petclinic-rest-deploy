@@ -34,6 +34,7 @@ on:
 
 env:
   VERSION_REGEXP: '^$|^latest$|^v[0-9]+\.[0-9]+\.[0-9]+$'
+  TAG_REGEXP: '^v[0-9]+\.[0-9]+\.[0-9]+$'
 
 jobs:
   build:
@@ -47,6 +48,14 @@ jobs:
             echo "::error ::version should match regular expression [version: ${{ inputs.version }}, regexp: $VERSION_REGEXP]";
             exit 1;
           fi
+
+      - name: 'Check release tag'
+        if: ${{ startsWith(inputs.version, 'v') }}
+        uses: oprypin/find-latest-tag@v1
+        with:
+          repository: kotoant/spring-petclinic-rest  # The repository to scan.
+          releases-only: true  # We know that all relevant tags have a GitHub release for them.
+          regex: '^${{ inputs.version }}$'
 
 #      - uses: 'actions/checkout@v3'
 #
