@@ -1,12 +1,17 @@
 name: Deploy to Google Kubernetes Engine (GKE) Autopilot
-run-name: 'Deploy [version: ${{ inputs.version }}, server: ${{ inputs.server }}, profile: ${{ inputs.profile }}]'
+run-name: 'Deploy [release: ${{ inputs.release }}, version: ${{ inputs.version }}, server: ${{ inputs.server }}, profile: ${{ inputs.profile }}]'
 
 on:
   workflow_dispatch:
     inputs:
+      release:
+        description: 'release'
+        required: true
+        default: true
+        type: boolean
       version:
         description: 'version'
-        required: false
+        required: true
         default: 'latest'
         type: string
       server:
@@ -34,7 +39,7 @@ on:
           - webflux-r2dbc-coroutine
 
 env:
-  VERSION_REGEXP: '^$|^latest$|^v[0-9]+\.[0-9]+\.[0-9]+$'
+  VERSION_REGEXP: '^latest$|^v[0-9]+\.[0-9]+\.[0-9]+$'
 
 jobs:
   build:
@@ -44,6 +49,10 @@ jobs:
     steps:
       - name: 'Check version'
         run: >
+          if [[ ! ${{ inputs.release }} && ${{ inputs.version }} != "latest" ]]; then
+            echo "::error ::release=false mode supports only latest version [version: ${{ inputs.version }}]";
+            exit 1;
+          fi
           if [[ ! ${{ inputs.version }} =~ $VERSION_REGEXP ]]; then
             echo "::error ::version should match regular expression [version: ${{ inputs.version }}, regexp: $VERSION_REGEXP]";
             exit 1;
@@ -54,7 +63,6 @@ jobs:
         uses: oprypin/find-latest-tag@v1
         with:
           repository: kotoant/spring-petclinic-rest  # The repository to scan.
-          releases-only: true  # We know that all relevant tags have a GitHub release for them.
           regex: '^${{ inputs.version }}$'
 
       - name: 'Find latest tag'
@@ -70,8 +78,13 @@ jobs:
           version=${{ inputs.version }};
           latestTag=${{ steps.find_latest_tag.outputs.tag }};
           if [[ $version == v* ]]; then echo "VERSION=$(echo ${version#"v"})" >> $GITHUB_ENV; fi;
-          if [[ $version == "" ]]; then echo "VERSION=latest" >> $GITHUB_ENV; fi;
-          if [[ $version == "latest" ]]; then echo "VERSION=$(echo ${latestTag#"v"})" >> $GITHUB_ENV; fi;
+          if [[ $version == "latest" ]]; then
+            if [[ ${{ inputs.release }} ]]; then
+              echo "VERSION=$(echo ${latestTag#"v"})" >> $GITHUB_ENV;
+            else
+              echo "VERSION=latest" >> $GITHUB_ENV;
+            fi;
+          fi;
 
       - name: 'Print version'
         run: >
