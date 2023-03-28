@@ -49,7 +49,7 @@ jobs:
     steps:
       - name: 'Check version'
         run: >
-          if [[ ! ${{ inputs.release }} ]] && [[ ${{ inputs.version }} != "latest" ]]; then
+          if [[ ! ${{ inputs.release }} ]] && [[ ${{ inputs.version }} -ne "latest" ]]; then
             echo "::error ::release=false mode supports only latest version [version: ${{ inputs.version }}]";
             exit 1;
           fi;
