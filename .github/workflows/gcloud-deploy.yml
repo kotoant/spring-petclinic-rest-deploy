@@ -33,7 +33,7 @@ on:
           - webflux-r2dbc-coroutine
 
 env:
-  VERSION_REGEXP: "^$|^latest$|^v[0-9]+\.[0-9]+\.[0-9]+$"
+  VERSION_REGEXP: '^$|^latest$|^v[0-9]+\.[0-9]+\.[0-9]+$'
 
 jobs:
   build:
