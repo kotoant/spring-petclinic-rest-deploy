@@ -1,6 +1,5 @@
 name: Restart deployment
-run-name: "Restart [mode: ${{ inputs.mode }}${{ inputs.mode == 'environment' && ', ${{ inputs.server }}, ${{ inputs.profile }}' || '' }}${{ inputs.dryRun && ', dry-run' || '' }}]"
-
+run-name: "Restart [mode: ${{ inputs.mode }}${{ inputs.mode == 'environment' && format(', {0}, {1}', ${{ inputs.server }}, ${{ inputs.profile }}) || '' }}${{ inputs.dryRun && ', dry-run' || '' }}]"
 
 on:
   workflow_dispatch:
