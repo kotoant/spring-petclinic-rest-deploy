@@ -1,5 +1,5 @@
 name: Deploy to Google Kubernetes Engine (GKE) Autopilot
-run-name: "Deploy [version: ${{ inputs.version }}, release: ${{ inputs.release }}, ${{ inputs.server }}, ${{ inputs.profile }}, dry-run: ${{ inputs.dryRun }}]"
+run-name: "Deploy [version: ${{ inputs.version }}${{ (inputs.version == 'latest' && inputs.release) $$ ' release' || '' }}, ${{ inputs.server }}, ${{ inputs.profile }}${{ inputs.dryRun && ', dry-run' || '' }}]"
 
 on:
   workflow_dispatch:
@@ -72,7 +72,7 @@ jobs:
           regex: '^v${{ inputs.version }}$'
 
       - name: 'Find latest tag'
-        if: ${{ inputs.release && inputs.version == 'latest' }}
+        if: ${{ inputs.version == 'latest' && inputs.release }}
         uses: oprypin/find-latest-tag@v1
         with:
           repository: kotoant/spring-petclinic-rest
@@ -81,7 +81,7 @@ jobs:
 
       - name: 'Calculate version'
         run: >
-          if [[ ${{ inputs.release }} == "true" && ${{ inputs.version }} == "latest" ]]; then
+          if [[ ${{ inputs.version }} == "latest" && ${{ inputs.release }} == "true" ]]; then
             latestTag=${{ steps.find_latest_tag.outputs.tag }};
             echo "VERSION=$(echo ${latestTag#"v"})" >> $GITHUB_ENV;
           else
