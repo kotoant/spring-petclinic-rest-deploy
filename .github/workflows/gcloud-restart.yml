@@ -7,13 +7,14 @@ on:
       mode:
         description: 'mode'
         required: true
-        default: 'rollout'
+        default: 'scale'
         type: choice
         options:
           - scale
           - rollout
           - environment
           - delete
+          - scale to zero
       server:
         description: 'server'
         required: true
@@ -78,7 +79,7 @@ jobs:
           source ./.github/scripts/.common.before_script.sh;
           run gcloud container clusters get-credentials autopilot-cluster-1 --region europe-north1 --project kotoant;
 
-      - name: 'Scale restart'
+      - name: 'Scale to 1'
         if: ${{ inputs.mode == 'scale' }}
         run: >
           source ./.github/scripts/.common.before_script.sh;
@@ -91,14 +92,20 @@ jobs:
           source ./.github/scripts/.common.before_script.sh;
           run kubectl rollout restart deployment spring-petclinic-rest --timeout=300s;
 
-      - name: 'Environment restart'
+      - name: 'Set env deployment'
         if: ${{ inputs.mode == 'environment' }}
         run: >
           source ./.github/scripts/.common.before_script.sh;
           run kubectl set env deployment spring-petclinic-rest SERVER=${{ inputs.server }} PROFILE==${{ inputs.profile }};
 
-      - name: 'Delete restart'
+      - name: 'Delete pods'
         if: ${{ inputs.mode == 'delete' }}
         run: >
           source ./.github/scripts/.common.before_script.sh;
           run kubectl delete pods -l app.kubernetes.io/name=spring-petclinic-rest;
+
+      - name: 'Scale to 0'
+        if: ${{ inputs.mode == 'scale to zero' }}
+        run: >
+          source ./.github/scripts/.common.before_script.sh;
+          run kubectl scale deployment spring-petclinic-rest --replicas=0;
