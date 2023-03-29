@@ -49,6 +49,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: 'Before'
+        run: >
+          echo "### Inputs:" >> $GITHUB_STEP_SUMMARY;
+          echo "${{ toJSON(inputs) }}" >> $GITHUB_STEP_SUMMARY;
+          echo "DRY_RUN=${{ inputs.dryRun }}" >> $GITHUB_ENV;
+
       - name: Checkout
         uses: 'actions/checkout@v3'
 
