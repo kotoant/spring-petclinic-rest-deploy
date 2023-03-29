@@ -2,9 +2,9 @@
 set -e
 
 run () {
-  PREFIX=$(if [[ "$DRY_RUN" == "1" ]]; then echo "dry run"; else echo "run"; fi)
+  PREFIX=$(if [[ "$DRY_RUN" == "true" ]]; then echo "dry run"; else echo "run"; fi)
   echo "$PREFIX: $*"
-  if [[ "$DRY_RUN" == "1" ]]; then
+  if [[ "$DRY_RUN" == "true" ]]; then
     return 0
   fi
   eval "$@"

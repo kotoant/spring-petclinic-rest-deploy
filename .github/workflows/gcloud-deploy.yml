@@ -44,7 +44,6 @@ on:
         type: boolean
 
 env:
-  ACTIONS_RUNNER_HOOK_JOB_STARTED: /.common.before_script.sh
   VERSION_REGEXP: '^latest$|^[0-9]+\.[0-9]+\.[0-9]+$'
 
 jobs:
@@ -53,9 +52,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 'Check version'
+      - name: 'Common before script'
         run: >
           echo "DRY_RUN=${{ inputs.dryRun }}" >> $GITHUB_ENV;
+          ./.github/scripts/.common.before_script.sh;
+
+      - name: 'Check version'
+        run: >
           if [[ ${{ inputs.release }} != "true" && ${{ inputs.version }} != "latest" ]]; then
             echo "::error ::release=false mode supports only latest version [version: ${{ inputs.version }}]";
             exit 1;
@@ -93,7 +96,8 @@ jobs:
         run: >
           echo "::notice ::Deploy version: $VERSION"
 
-      - uses: 'actions/checkout@v3'
+      - name: Checkout
+        uses: 'actions/checkout@v3'
 
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
