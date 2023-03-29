@@ -1,10 +1,9 @@
 name: Deploy to Google Kubernetes Engine (GKE) Autopilot
-run-name: 'Deploy [release: ${{ inputs.release }}, ${{ inputs.version }}, ${{ inputs.server }}, ${{ inputs.profile }}, dry-run: ${{ inputs.dryRun }}]'
+run-name: 'Deploy [version: ${{ inputs.version }}, release: ${{ inputs.release }}, ${{ inputs.server }}, ${{ inputs.profile }}, dry-run: ${{ inputs.dryRun }}]'
 
 on:
   workflow_dispatch:
     inputs:
-
       version:
         description: 'version'
         required: true
