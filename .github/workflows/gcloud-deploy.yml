@@ -1,5 +1,5 @@
 name: Deploy to Google Kubernetes Engine (GKE) Autopilot
-run-name: 'Deploy [version: ${{ inputs.version }}, release: ${{ inputs.release }}, ${{ inputs.server }}, ${{ inputs.profile }}, dry-run: ${{ inputs.dryRun }}]'
+run-name: 'Deploy [version: ${{ inputs.version }}${{ inputs.version == "latest" && inputs.release == "release" && " release" || "" }}, ${{ inputs.server }}, ${{ inputs.profile }}, dry-run: ${{ inputs.dryRun }}]'
 
 on:
   workflow_dispatch:
@@ -52,16 +52,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: 'actions/checkout@v3'
-
-      - name: 'Common before script'
-        run: >
-          echo "DRY_RUN=${{ inputs.dryRun }}" >> $GITHUB_ENV;
-          source ./.github/scripts/.common.before_script.sh;
-
       - name: 'Check version'
         run: >
+          echo "DRY_RUN=${{ inputs.dryRun }}" >> $GITHUB_ENV;
           if [[ ${{ inputs.release }} != "true" && ${{ inputs.version }} != "latest" ]]; then
             echo "::error ::release=false mode supports only latest version [version: ${{ inputs.version }}]";
             exit 1;
@@ -123,8 +116,12 @@ jobs:
         run: >
           gcloud container clusters get-credentials autopilot-cluster-1 --region europe-north1 --project kotoant
 
+      - name: Checkout
+        uses: 'actions/checkout@v3'
+
       - name: 'Deploy'
         run: >
+          source ./.github/scripts/.common.before_script.sh;
           run helm upgrade spring-petclinic-rest
           --set appVersion=$VERSION
           --set server=${{ inputs.server }}
