@@ -1,5 +1,5 @@
 name: Deploy to Google Kubernetes Engine (GKE) Autopilot
-run-name: "Deploy [version: ${{ inputs.version }}${{ (inputs.version == 'latest' && inputs.release) && ' release' || '' }}, ${{ inputs.server }}, ${{ inputs.profile }}${{ inputs.dryRun && ', dry-run' || '' }}]"
+run-name: "Deploy [version: ${{ inputs.version }}${{ inputs.version == 'latest' && (inputs.imageTagLatest && 'image tag' || 'github release') || '' }}, ${{ inputs.server }}, ${{ inputs.profile }}${{ inputs.dryRun && ', dry-run' || '' }}]"
 
 on:
   workflow_dispatch:
@@ -9,10 +9,10 @@ on:
         required: true
         default: 'latest'
         type: string
-      release:
-        description: 'release'
+      imageTagLatest:
+        description: 'image tag: latest'
         required: true
-        default: true
+        default: false
         type: boolean
       server:
         description: 'server'
@@ -55,8 +55,8 @@ jobs:
       - name: 'Check version'
         run: >
           echo "DRY_RUN=${{ inputs.dryRun }}" >> $GITHUB_ENV;
-          if [[ ${{ inputs.release }} != "true" && ${{ inputs.version }} != "latest" ]]; then
-            echo "::error ::release=false mode supports only latest version [version: ${{ inputs.version }}]";
+          if [[ ${{ inputs.imageTagLatest }} == "true" && ${{ inputs.version }} != "latest" ]]; then
+            echo "::error ::image tag: latest mode supports only latest version [version: ${{ inputs.version }}]";
             exit 1;
           fi;
           if [[ ! ${{ inputs.version }} =~ $VERSION_REGEXP ]]; then
@@ -72,7 +72,7 @@ jobs:
           regex: '^v${{ inputs.version }}$'
 
       - name: 'Find latest tag'
-        if: ${{ inputs.version == 'latest' && inputs.release }}
+        if: ${{ inputs.version == 'latest' && ! inputs.imageTagLatest }}
         uses: oprypin/find-latest-tag@v1
         with:
           repository: kotoant/spring-petclinic-rest
@@ -81,7 +81,7 @@ jobs:
 
       - name: 'Calculate version'
         run: >
-          if [[ ${{ inputs.version }} == "latest" && ${{ inputs.release }} == "true" ]]; then
+          if [[ ${{ inputs.version }} == "latest" && ${{ inputs.imageTagLatest }} == "false" ]]; then
             latestTag=${{ steps.find_latest_tag.outputs.tag }};
             echo "VERSION=$(echo ${latestTag#"v"})" >> $GITHUB_ENV;
           else
@@ -91,6 +91,9 @@ jobs:
       - name: 'Print version'
         run: >
           echo "::notice ::Deploy version: $VERSION"
+
+      - name: Checkout
+        uses: 'actions/checkout@v3'
 
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
@@ -115,9 +118,6 @@ jobs:
       - name: 'Connect to GKE'
         run: >
           gcloud container clusters get-credentials autopilot-cluster-1 --region europe-north1 --project kotoant
-
-      - name: Checkout
-        uses: 'actions/checkout@v3'
 
       - name: 'Deploy'
         run: >
