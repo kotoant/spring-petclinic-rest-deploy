@@ -121,7 +121,7 @@ jobs:
 
       - name: 'Deploy'
         run: >
-          ./.github/scripts/.common.before_script.sh;
+          source ./.github/scripts/.common.before_script.sh;
           run helm upgrade spring-petclinic-rest
           --set appVersion=$VERSION
           --set server=${{ inputs.server }}
