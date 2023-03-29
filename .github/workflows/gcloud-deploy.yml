@@ -1,5 +1,5 @@
 name: Deploy to Google Kubernetes Engine (GKE) Autopilot
-run-name: "Deploy [version: ${{ inputs.version }}${{ inputs.version == 'latest' && inputs.release == 'release' && ' release' || '' }}, ${{ inputs.server }}, ${{ inputs.profile }}, dry-run: ${{ inputs.dryRun }}]"
+run-name: "Deploy [version: ${{ inputs.version }}${{ inputs.version == 'latest' && inputs.release == 'true' && ' release' || '' }}, ${{ inputs.server }}, ${{ inputs.profile }}${{ inputs.dryRun == 'true' && ', dry-run' || '' }}]"
 
 on:
   workflow_dispatch:
