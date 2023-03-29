@@ -1,5 +1,5 @@
 name: Deploy to Google Kubernetes Engine (GKE) Autopilot
-run-name: 'Deploy [release: ${{ inputs.release }}, version: ${{ inputs.version }}, server: ${{ inputs.server }}, profile: ${{ inputs.profile }}]'
+run-name: 'Deploy [release: ${{ inputs.release }}, version: ${{ inputs.version }}, server: ${{ inputs.server }}, profile: ${{ inputs.profile }}, dry-run: ${{ inputs.dryRun }}]'
 
 on:
   workflow_dispatch:
@@ -52,6 +52,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout
+        uses: 'actions/checkout@v3'
+
       - name: 'Common before script'
         run: >
           echo "DRY_RUN=${{ inputs.dryRun }}" >> $GITHUB_ENV;
@@ -95,9 +98,6 @@ jobs:
       - name: 'Print version'
         run: >
           echo "::notice ::Deploy version: $VERSION"
-
-      - name: Checkout
-        uses: 'actions/checkout@v3'
 
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
