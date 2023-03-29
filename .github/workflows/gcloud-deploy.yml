@@ -72,7 +72,7 @@ jobs:
           regex: '^v${{ inputs.version }}$'
 
       - name: 'Find latest tag'
-        if: ${{ inputs.release == 'true' && inputs.version == 'latest' }}
+        if: ${{ inputs.release && inputs.version == 'latest' }}
         uses: oprypin/find-latest-tag@v1
         with:
           repository: kotoant/spring-petclinic-rest
