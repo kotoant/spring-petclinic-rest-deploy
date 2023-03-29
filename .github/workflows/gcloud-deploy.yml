@@ -39,7 +39,7 @@ on:
           - webflux-r2dbc-coroutine
 
 env:
-  VERSION_REGEXP: '^latest$|^v[0-9]+\.[0-9]+\.[0-9]+$'
+  VERSION_REGEXP: '^latest$|^[0-9]+\.[0-9]+\.[0-9]+$'
 
 jobs:
   build:
@@ -58,34 +58,28 @@ jobs:
             exit 1;
           fi;
 
-      - name: 'Check release tag'
-        if: ${{ startsWith(inputs.version, 'v') }}
+      - name: 'Check version tag'
+        if: ${{ inputs.version != 'latest' }}
         uses: oprypin/find-latest-tag@v1
         with:
-          repository: kotoant/spring-petclinic-rest  # The repository to scan.
-          regex: '^${{ inputs.version }}$'
+          repository: kotoant/spring-petclinic-rest
+          regex: '^v${{ inputs.version }}$'
 
       - name: 'Find latest tag'
-        if: ${{ inputs.version == 'latest' }}
+        if: ${{ inputs.release == 'true' && inputs.version == 'latest' }}
         uses: oprypin/find-latest-tag@v1
         with:
-          repository: kotoant/spring-petclinic-rest  # The repository to scan.
+          repository: kotoant/spring-petclinic-rest
           regex: '^v\d+\.\d+\.\d+$'
-        id: find_latest_tag  # The step ID to refer to later.
+        id: find_latest_tag
 
       - name: 'Calculate version'
         run: >
-          version=${{ inputs.version }};
-          latestTag=${{ steps.find_latest_tag.outputs.tag }};
-          if [[ $version == v* ]]; then
-            echo "VERSION=$(echo ${version#"v"})" >> $GITHUB_ENV;
-          fi;
-          if [[ $version == "latest" ]]; then
-            if [[ ${{ inputs.release }} == "true" ]]; then
-              echo "VERSION=$(echo ${latestTag#"v"})" >> $GITHUB_ENV;
-            else
-              echo "VERSION=latest" >> $GITHUB_ENV;
-            fi;
+          if [[ ${{ inputs.release }} == "true" && ${{ inputs.version }} == "latest" ]]; then
+            latestTag=${{ steps.find_latest_tag.outputs.tag }};
+            echo "VERSION=$(echo ${latestTag#"v"})" >> $GITHUB_ENV;
+          else
+            echo "VERSION=${{ inputs.version }}" >> $GITHUB_ENV;
           fi;
 
       - name: 'Print version'
