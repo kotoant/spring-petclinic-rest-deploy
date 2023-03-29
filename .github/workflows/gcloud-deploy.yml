@@ -54,6 +54,7 @@ jobs:
     steps:
       - name: 'Check version'
         run: >
+          echo "::notice ::Inputs version: ${{ toJSON(inputs) }}";
           echo "DRY_RUN=${{ inputs.dryRun }}" >> $GITHUB_ENV;
           if [[ ${{ inputs.imageTagLatest }} == "true" && ${{ inputs.version }} != "latest" ]]; then
             echo "::error ::image tag: latest mode supports only latest version [version: ${{ inputs.version }}]";
