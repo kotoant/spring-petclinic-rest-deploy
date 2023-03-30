@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 'Check version'
+      - name: Check version
         run: >
           echo "### Inputs:" >> $GITHUB_STEP_SUMMARY;
           echo "${{ toJSON(inputs) }}" >> $GITHUB_STEP_SUMMARY;
@@ -66,14 +66,14 @@ jobs:
             exit 1;
           fi;
 
-      - name: 'Check version tag'
+      - name: Check version tag
         if: ${{ inputs.version != 'latest' }}
         uses: oprypin/find-latest-tag@v1
         with:
           repository: kotoant/spring-petclinic-rest
           regex: '^v${{ inputs.version }}$'
 
-      - name: 'Find latest tag'
+      - name: Find latest tag
         if: ${{ inputs.version == 'latest' && ! inputs.imageTagLatest }}
         uses: oprypin/find-latest-tag@v1
         with:
@@ -81,7 +81,7 @@ jobs:
           regex: '^v\d+\.\d+\.\d+$'
         id: find_latest_tag
 
-      - name: 'Calculate version'
+      - name: Calculate version
         run: >
           if [[ ${{ inputs.version }} == "latest" && ${{ inputs.imageTagLatest }} == "false" ]]; then
             latestTag=${{ steps.find_latest_tag.outputs.tag }};
@@ -90,38 +90,38 @@ jobs:
             echo "VERSION=${{ inputs.version }}" >> $GITHUB_ENV;
           fi;
 
-      - name: 'Print version'
+      - name: Print version
         run: >
           echo "::notice ::Deploy version: $VERSION"
 
       - name: Checkout
-        uses: 'actions/checkout@v3'
+        uses: actions/checkout@v3
 
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v1'
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
         with:
-          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v1'
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
         with:
           version: '422.0.0'
 
-      - name: 'Set up Helm'
+      - name: Set up Helm
         uses: azure/setup-helm@v3
         with:
           version: '3.11.2'
 
-      - name: 'Install gke-gcloud-auth-plugin'
+      - name: Install gke-gcloud-auth-plugin
         run: >
           gcloud components install gke-gcloud-auth-plugin --quiet
 
-      - name: 'Connect to GKE'
+      - name: Connect to GKE
         run: >
           gcloud container clusters get-credentials autopilot-cluster-1 --region europe-north1 --project kotoant
 
-      - name: 'Deploy'
+      - name: Deploy
         run: >
           source ./.github/scripts/.common.before_script.sh;
           run helm upgrade spring-petclinic-rest

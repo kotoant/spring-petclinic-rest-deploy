@@ -50,61 +50,61 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 'Before'
+      - name: Before
         run: >
           echo "### Inputs:" >> $GITHUB_STEP_SUMMARY;
           echo "${{ toJSON(inputs) }}" >> $GITHUB_STEP_SUMMARY;
           echo "DRY_RUN=${{ inputs.dryRun }}" >> $GITHUB_ENV;
 
       - name: Checkout
-        uses: 'actions/checkout@v3'
+        uses: actions/checkout@v3
 
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v1'
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
         with:
-          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v1'
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
         with:
           version: '422.0.0'
 
-      - name: 'Install gke-gcloud-auth-plugin'
+      - name: Install gke-gcloud-auth-plugin
         run: >
           gcloud components install gke-gcloud-auth-plugin --quiet
 
-      - name: 'Connect to GKE'
+      - name: Connect to GKE
         run: >
           source ./.github/scripts/.common.before_script.sh;
           run gcloud container clusters get-credentials autopilot-cluster-1 --region europe-north1 --project kotoant;
 
-      - name: 'Scale to 1'
+      - name: Scale to 1
         if: ${{ inputs.mode == 'scale' }}
         run: >
           source ./.github/scripts/.common.before_script.sh;
           run kubectl scale deployment spring-petclinic-rest --replicas=0;
           run kubectl scale deployment spring-petclinic-rest --replicas=1;
 
-      - name: 'Rollout restart'
+      - name: Rollout restart
         if: ${{ inputs.mode == 'rollout' }}
         run: >
           source ./.github/scripts/.common.before_script.sh;
           run kubectl rollout restart deployment spring-petclinic-rest --timeout=300s;
 
-      - name: 'Set env deployment'
+      - name: Set env deployment
         if: ${{ inputs.mode == 'environment' }}
         run: >
           source ./.github/scripts/.common.before_script.sh;
           run kubectl set env deployment spring-petclinic-rest SERVER=${{ inputs.server }} PROFILE==${{ inputs.profile }};
 
-      - name: 'Delete pods'
+      - name: Delete pods
         if: ${{ inputs.mode == 'delete' }}
         run: >
           source ./.github/scripts/.common.before_script.sh;
           run kubectl delete pods -l app.kubernetes.io/name=spring-petclinic-rest;
 
-      - name: 'Scale to 0'
+      - name: Scale to 0
         if: ${{ inputs.mode == 'scale to zero' }}
         run: >
           source ./.github/scripts/.common.before_script.sh;
