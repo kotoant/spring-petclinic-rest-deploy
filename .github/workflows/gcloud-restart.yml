@@ -96,7 +96,7 @@ jobs:
         if: ${{ inputs.mode == 'environment' }}
         run: >
           source ./.github/scripts/.common.before_script.sh;
-          run kubectl set env deployment spring-petclinic-rest SERVER=${{ inputs.server }} PROFILE==${{ inputs.profile }};
+          run kubectl set env deployment spring-petclinic-rest SERVER=${{ inputs.server }} PROFILE=${{ inputs.profile }};
 
       - name: Delete pods
         if: ${{ inputs.mode == 'delete' }}

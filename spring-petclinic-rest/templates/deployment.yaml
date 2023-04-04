@@ -43,6 +43,13 @@ spec:
             - name: http
               containerPort: {{ .Values.containerPort }}
               protocol: TCP
+          env:
+            - name: PORT
+              value: {{ .Values.containerPort | quote }}
+            - name: SERVER
+              value: {{ .Values.server | quote }}
+            - name: PROFILE
+              value: {{ .Values.image.profile | quote }}
           envFrom:
             - configMapRef:
                 name: {{ include "spring-petclinic-rest.fullname" . }}-env-configmap
