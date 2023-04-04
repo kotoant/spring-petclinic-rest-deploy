@@ -128,4 +128,4 @@ jobs:
           --set appVersion=$VERSION
           --set server=${{ inputs.server }}
           --set profile=${{ inputs.profile }}
-          ./spring-petclinic-rest --atomic --install --timeout 5m --wait
+          ./spring-petclinic-rest --atomic --install --timeout 6m --wait
