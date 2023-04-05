@@ -52,16 +52,33 @@ db:
   username: petclinic
   password: petclinic
 
-springConfig:
-  server: https://spring-cloud-config-server-n2u6xnwqaa-lz.a.run.app
-  name: petclinic
-  label: main
-  failFast: true
-  retry:
-    initialInterval: 5000
-    multiplier: 1.1
-    maxInterval: 10000
-    maxAttempts: 6
+config:
+  spring:
+    config:
+      import: 'configserver:'
+    cloud:
+      config:
+        uri: https://spring-cloud-config-server-n2u6xnwqaa-lz.a.run.app
+        name: petclinic
+        label: main
+        fail-fast: true
+        request-read-timeout: 185000
+        request-connect-timeout: 10000
+        retry:
+          initial-interval: 5000
+          multiplier: 1.1
+          max-interval: 10000
+          max-attempts: 6
+    profiles:
+      group:
+        webmvc-jdbc: jdbc
+        webmvc-jdbc-loom: jdbc,loom
+        webflux-jdbc-reactive: jdbc,reactive
+        webflux-jdbc-loom: jdbc,reactive,loom
+        webflux-jdbc-coroutine: jdbc,coroutine
+        webflux-r2dbc-reactive: r2dbc,reactive
+        webflux-r2dbc-coroutine: r2dbc,coroutine
+      default: webmvc-jdbc
 
 service:
   type: NodePort
