@@ -55,20 +55,30 @@ spec:
                 name: {{ include "spring-petclinic-rest.fullname" . }}-env-configmap
             - secretRef:
                 name: {{ include "spring-petclinic-rest.fullname" . }}-env-secret
+          startupProbe:
+            httpGet:
+              path: /livez
+              port: {{ .Values.containerPort }}
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 30
           livenessProbe:
             httpGet:
               path: /livez
               port: {{ .Values.containerPort }}
-            initialDelaySeconds: 60
             periodSeconds: 10
-            failureThreshold: 1
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
           readinessProbe:
             httpGet:
               path: /readyz
               port: {{ .Values.containerPort }}
-            initialDelaySeconds: 60
             periodSeconds: 10
-            failureThreshold: 1
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
