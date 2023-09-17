@@ -50,6 +50,8 @@ spec:
               value: {{ .Values.server | quote }}
             - name: PROFILE
               value: {{ .Values.profile | quote }}
+            - name: JAVA_OPTIONS
+              value: {{ .Values.javaOptions | quote }}
           envFrom:
             - configMapRef:
                 name: {{ include "spring-petclinic-rest.fullname" . }}-env-configmap

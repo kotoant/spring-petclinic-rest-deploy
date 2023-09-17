@@ -10,3 +10,4 @@ data:
   PORT: {{ .Values.containerPort | quote }}
   SERVER: {{ .Values.server | quote }}
   PROFILE: {{ .Values.profile | quote }}
+  JAVA_OPTIONS: {{ .Values.javaOptions | quote }}
