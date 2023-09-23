@@ -45,7 +45,7 @@ securityContext: {}
 containerPort: 8080
 server: tomcat
 profile: webmvc-jdbc
-javaOptions: -XX:MaxDirectMemorySize=1g
+javaOptions: -XX:MaxDirectMemorySize=1g -Djdk.tracePinnedThreads=full
 
 db:
   host: 10.59.32.3
