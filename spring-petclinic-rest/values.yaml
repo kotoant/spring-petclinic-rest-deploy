@@ -48,7 +48,7 @@ profile: webmvc-jdbc
 javaOptions: -XX:MaxDirectMemorySize=1g -Djdk.tracePinnedThreads=full -Dkotlinx.coroutines.io.parallelism=128
 
 db:
-  host: 34.88.39.197
+  host: 10.52.0.3
   name: petclinic
   username: petclinic
   password: petclinic
