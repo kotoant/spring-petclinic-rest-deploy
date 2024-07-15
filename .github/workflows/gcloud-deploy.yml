@@ -119,7 +119,7 @@ jobs:
 
       - name: Connect to GKE
         run: >
-          gcloud container clusters get-credentials autopilot-cluster-1 --region europe-north1 --zone europe-north1-b --project kotoant
+          gcloud container clusters get-credentials autopilot-cluster-1 --zone europe-north1-b --project kotoant
 
       - name: Deploy
         run: >
