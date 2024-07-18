@@ -60,7 +60,7 @@ spec:
           startupProbe:
             httpGet:
               path: /livez
-              port: {{ .Values.containerPort }}
+              port: 8081
             periodSeconds: 10
             timeoutSeconds: 10
             successThreshold: 1
@@ -68,7 +68,7 @@ spec:
           livenessProbe:
             httpGet:
               path: /livez
-              port: {{ .Values.containerPort }}
+              port: 8081
             periodSeconds: 10
             timeoutSeconds: 10
             successThreshold: 1
@@ -76,7 +76,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /readyz
-              port: {{ .Values.containerPort }}
+              port: 8081
             periodSeconds: 10
             timeoutSeconds: 10
             successThreshold: 1
