@@ -43,6 +43,9 @@ spec:
             - name: http
               containerPort: {{ .Values.containerPort }}
               protocol: TCP
+            - name: management
+              containerPort: 8081
+              protocol: TCP
           env:
             - name: PORT
               value: {{ .Values.containerPort | quote }}

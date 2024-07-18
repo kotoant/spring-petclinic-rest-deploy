@@ -11,5 +11,9 @@ spec:
       targetPort: {{ .Values.containerPort }}
       protocol: TCP
       name: http
+    - port: 81
+      targetPort: 8081
+      protocol: TCP
+      name: management
   selector:
     {{- include "spring-petclinic-rest.selectorLabels" . | nindent 4 }}
