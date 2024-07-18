@@ -43,9 +43,9 @@ spec:
             - name: http
               containerPort: {{ .Values.containerPort }}
               protocol: TCP
-            - name: management
-              containerPort: 8081
-              protocol: TCP
+#            - name: management
+#              containerPort: 8081
+#              protocol: TCP
           env:
             - name: PORT
               value: {{ .Values.containerPort | quote }}
@@ -63,7 +63,7 @@ spec:
           startupProbe:
             httpGet:
               path: /livez
-              port: 8081
+              port: {{ .Values.containerPort }}
             periodSeconds: 10
             timeoutSeconds: 10
             successThreshold: 1
@@ -71,7 +71,7 @@ spec:
           livenessProbe:
             httpGet:
               path: /livez
-              port: 8081
+              port: {{ .Values.containerPort }}
             periodSeconds: 10
             timeoutSeconds: 10
             successThreshold: 1
@@ -79,7 +79,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /readyz
-              port: 8081
+              port: {{ .Values.containerPort }}
             periodSeconds: 10
             timeoutSeconds: 10
             successThreshold: 1
