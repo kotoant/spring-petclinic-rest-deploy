@@ -48,7 +48,7 @@ profile: webmvc-jdbc
 javaOptions: -XX:MaxDirectMemorySize=1g -Djdk.tracePinnedThreads=full -Dkotlinx.coroutines.io.parallelism=128 -XX:StartFlightRecording=filename=/usr/local/app/dump/recording.jfr,dumponexit=true,delay=60s -XX:FlightRecorderOptions=stackdepth=2048
 
 db:
-  host: 10.52.0.3
+  host: 10.52.0.13
   name: petclinic
   username: petclinic
   password: petclinic
