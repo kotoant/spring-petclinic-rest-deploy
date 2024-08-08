@@ -45,7 +45,7 @@ securityContext: {}
 containerPort: 8080
 server: tomcat
 profile: webmvc-jdbc
-javaOptions: -XX:MaxDirectMemorySize=1g -Djdk.tracePinnedThreads=full -Dkotlinx.coroutines.io.parallelism=128 -XX:StartFlightRecording=filename=/usr/local/app/dump/recording.jfr,dumponexit=true,delay=60s -XX:FlightRecorderOptions=stackdepth=2048
+javaOptions: -XX:MaxDirectMemorySize=1g -Djdk.tracePinnedThreads=full -Dkotlinx.coroutines.io.parallelism=128 -XX:StartFlightRecording=filename=/usr/local/app/dump/recording.jfr,dumponexit=true,delay=90s -XX:FlightRecorderOptions=stackdepth=2048
 
 db:
   host: 10.52.0.13
